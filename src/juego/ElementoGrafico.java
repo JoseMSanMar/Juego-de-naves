@@ -1,10 +1,5 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package juego;
 
-import edu.epromero.util.LienzoStd;
 import edu.epromero.util.Lienzo;
 import edu.epromero.util.Imagen;
 
@@ -12,14 +7,14 @@ import edu.epromero.util.Imagen;
  *
  * @author user
  */
-abstract public class ElementoGrafico {
+public abstract class ElementoGrafico {
 
-    protected double x; //Columna del elemento
-    protected double y; //Renglon del elemento
-    protected String nomSprite; //El nombre del archivo que contiene el sprite
-    protected Imagen miImagen;
-    protected boolean visible;
-    protected Lienzo canvas;
+    private double columna; //Columna del elemento
+    private double renglon; //Renglon del elemento
+    private String nomSprite; //El nombre del archivo que contiene el sprite
+    private Imagen miImagen;
+    private boolean visible;
+    private Lienzo canvas;
 
     public static final int DERECHA = 1;
     public static final int IZQUIERDA = -1;
@@ -30,8 +25,8 @@ abstract public class ElementoGrafico {
      * Este es el constructor
      */
     public ElementoGrafico() {
-        setX(0);
-        setY(0);
+        setColumna(0);
+        setRenglon(0);
         setNomSprite("");
     }
 
@@ -42,8 +37,8 @@ abstract public class ElementoGrafico {
      * @param ren el renglon en la que se establece la imagen
      */
     public ElementoGrafico(double col, double ren) {
-        setX(col);
-        setY(ren);
+        setColumna(col);
+        setRenglon(ren);
         setNomSprite("");
 
     }
@@ -60,34 +55,34 @@ abstract public class ElementoGrafico {
         this.miImagen = new Imagen(getNomSprite());
     }
 
-    public abstract void mueve(Entrada e);
+    public abstract void Mueve(Entrada e);
 
     /**
-     * @return the x
+     * @return the columna
      */
-    public double getX() {
-        return x;
+    public double getColumna() {
+        return columna;
     }
 
     /**
-     * @param x the x to set
+     * @param columna the columna to set
      */
-    public void setX(double x) {
-        this.x = x;
+    public void setColumna(double columna) {
+        this.columna = columna;
     }
 
     /**
-     * @return the y
+     * @return the renglon
      */
-    public double getY() {
-        return y;
+    public double getRenglon() {
+        return renglon;
     }
 
     /**
-     * @param y the y to set
+     * @param renglon the renglon to set
      */
-    public void setY(double y) {
-        this.y = y;
+    public void setRenglon(double renglon) {
+        this.renglon = renglon;
     }
 
     /**
@@ -123,5 +118,19 @@ abstract public class ElementoGrafico {
      */
     public void setVisible(boolean visible) {
         this.visible = visible;
+    }
+
+    /**
+     * @return the canvas
+     */
+    public Lienzo getCanvas() {
+        return canvas;
+    }
+
+    /**
+     * @param canvas the canvas to set
+     */
+    public void setCanvas(Lienzo canvas) {
+        this.canvas = canvas;
     }
 }

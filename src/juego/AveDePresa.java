@@ -1,17 +1,13 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package juego;
 
-import edu.epromero.util.Imagen;
 import edu.epromero.util.Lienzo;
-import static juego.ElementoGrafico.DERECHA;
+import edu.epromero.util.ComportamientoEnemigo;
 
 /**
  *
  * @author user
  */
+@ComportamientoEnemigo(tipo = "AveDePresa", resistencia = 2, puntos = 100)
 public class AveDePresa extends NaveEnemiga {
 
     private int componenteY;
@@ -19,25 +15,60 @@ public class AveDePresa extends NaveEnemiga {
     public AveDePresa() {
 
         super();
-        setNomSprite(".\\src\\avepresa.png"); // Pon la ruta de tu imagen enemiga
-        this.miImagen = new Imagen(getNomSprite());
-        this.miImagen.ponColorTransparente(Lienzo.BLANCO);
+        // Pon la ruta de tu imagen enemiga
+        setNomSprite("./resources/avepresa.png");
+        inicia();
+        getMiImagen().ponColorTransparente(Lienzo.BLANCO);
         //Se inicia la direccion de la nave
         this.componenteY = ABAJO;
+        setPuntos(100);
+        setVidas(2);
     }
 
     @Override
-    public void mueve(Entrada e) {
+    public void Mueve(Entrada e) {
         //Averiguar si se sale por la derecha
-        if (y > (e.getMiCanvas().pideLimiteYMax()) - 120)//cambiar el sentido
-        {
+        //cambiar el sentido
+        if (getRenglon() > (e.getMiCanvas().pideLimiteYMax()) - 120) {
             setComponenteY(ABAJO);
         }
         //Averiguar si se sale por la izq
-        if (y < (e.getMiCanvas().pideLimiteYMin()) + 120) {
+        if (getRenglon() < (e.getMiCanvas().pideLimiteYMin()) + 120) {
             setComponenteY(ARRIBA);
         }
-        y = y + getComponenteY() * 30;
+        setRenglon(getRenglon() + (getComponenteY() * 30));
+
+        dispara();
+
+        // ACTUALIZACIÓN DE LA BALA:
+        //Si la bala está activa, avanza UN paso en este frame
+        if (getBala().getEstado() == Bala.VUELO) {
+            getBala().Mueve(e);
+        }
+    }
+
+    public void dispara() {
+        // IA de disparo por probabilidad (20% de probabilidad por frame)
+        if (Math.random() < 0.2) {
+            if (getBala().getEstado() == Bala.INACTIVA) {
+                getBala().iniciarPosicion(getColumna(), getRenglon(), -60);
+                getBala().setEstado(Bala.VUELO);
+            }
+        }
+    }
+
+    public boolean hayColision(Bala bala) {
+        boolean siHayColision;
+        siHayColision = false;
+        if (getRenglon() < bala.getRenglon() + 80
+                && getRenglon() > bala.getRenglon() - 80) {
+            if (getColumna() < bala.getColumna() + 80
+                    && getColumna() > bala.getColumna() - 80) {
+                siHayColision = true;
+            }
+        }
+
+        return siHayColision;
     }
 
     /**

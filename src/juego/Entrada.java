@@ -8,9 +8,9 @@ import edu.epromero.util.Lienzo;
  */
 public class Entrada {
 
-    protected Lienzo miCanvas;
-    protected int tecla;
-    protected Heroe bueno;
+    private Lienzo miCanvas;
+    private int tecla;
+    private Heroe bueno;
 
     /**
      * @return the miCanvas
@@ -38,6 +38,20 @@ public class Entrada {
      */
     public void setTecla(int tecla) {
         this.tecla = tecla;
+    }
+
+    /**
+     * @return the bueno
+     */
+    public Heroe getBueno() {
+        return bueno;
+    }
+
+    /**
+     * @param bueno the bueno to set
+     */
+    public void setBueno(Heroe bueno) {
+        this.bueno = bueno;
     }
 
 }

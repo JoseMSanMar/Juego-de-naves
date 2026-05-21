@@ -1,9 +1,6 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package juego;
 
+import edu.epromero.util.Imagen;
 import edu.epromero.util.Lienzo;
 
 /**
@@ -18,31 +15,35 @@ public class Bala extends ElementoGrafico {
     private int estado;
     private int ciclosExplosion;
     private Lienzo lienzo;
+    private Imagen miImagen;
+    private double direccionY = 30;
 
     public Bala() {
         super();
-        setNomSprite(".\\src\\bala.png");
+        setNomSprite("./resources/bala.png");
         inicia();
-        this.miImagen.ponColorTransparente(Lienzo.BLANCO);
+        getMiImagen().ponColorTransparente(Lienzo.BLANCO);
         setEstado(INACTIVA);
 
     }
 
-    public void iniciarPosicion(double x, double y) {
-        this.x = x;
-        this.y = y;
+    public void iniciarPosicion(double x, double y, double direccionY) {
+        setColumna(x);
+        setRenglon(y);
+        this.direccionY = direccionY;
     }
 
     public void pinta(Lienzo canvas) {
-        this.canvas = canvas;
-        canvas.dibujo(getX(), getY(), this.miImagen);
+        setCanvas(canvas);
+        canvas.dibujo(getColumna(), getRenglon(), getMiImagen());
     }
 
     @Override
-    public void mueve(Entrada e) {
+    public void Mueve(Entrada e) {
         if (getEstado() == VUELO) {
-            this.y += 30;
-            if (this.y >= e.getMiCanvas().pideLimiteYMax()) {
+            setRenglon(getRenglon() + direccionY);
+            if (getRenglon() >= e.getMiCanvas().pideLimiteYMax()
+                    || getRenglon() <= e.getMiCanvas().pideLimiteYMin()) {
                 setEstado(INACTIVA);
             }
         }

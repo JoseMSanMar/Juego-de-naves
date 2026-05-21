@@ -1,57 +1,95 @@
 package juego;
 
-import edu.epromero.util.Imagen;
+import edu.epromero.util.Destruible;
 import edu.epromero.util.Lienzo;
 
 /**
  *
  * @author user
  */
-public class NaveEnemiga extends ElementoGrafico {
+public class NaveEnemiga extends ElementoGrafico implements Destruible {
 
-    protected int posRanX;
-    protected int posRanY;
-    protected int puntos;
+    /**
+     * @return the miImagen
+     */
+    private int posRanX;
+    private int posRanY;
+    private int puntos;
+    private Bala bala;
+    private boolean danioFatal;
+    private int vidas;
 
     public NaveEnemiga() {
         super();
-        setNomSprite(".\\src\\enemigo.png");
+        setNomSprite("./resources/enemigo.png");
         inicia();
-        this.miImagen.ponColorTransparente(Lienzo.BLANCO);
+        getMiImagen().ponColorTransparente(Lienzo.BLANCO);
+        bala = new Bala();
+
+        aparecer();
     }
 
     public void pinta(Lienzo canvas) {
-        this.canvas = canvas;
-        canvas.dibujo(x, y, this.miImagen);
+        //asignamos el canvas a local
+        setCanvas(canvas);
+        //if(isVisible()){
+        // dibujamos la NaveEnemiga
+        canvas.dibujo(getColumna(), getRenglon(), this.getMiImagen());
+        //Revisamos si la bala esta activa
+        if (getBala().getEstado() != Bala.INACTIVA) {
+            //Se dibuja la bala
+            getBala().pinta(getCanvas());
+        }
+    }
+
+    @Override
+    public boolean recibirDanio() {
+        if (getVidasActuales() <= 0) {
+            setDanioFatal(true);
+        }
+        return isDanioFatal();
+    }
+
+    public void perderVida() {
+        setVidas(getVidasActuales() - 1);
+    }
+
+    public void destruir(boolean danio) {
+        if (danio) {
+            setVisible(false);
+        }
     }
 
     public void Random() {
         int buffer;
-        int i;
-        //ciclo para hacer random a @param y
+        //ciclo para hacer random a @param renglon
         do {
-            buffer = (int) (Math.random() * (this.canvas.pideLimiteYMax()
-                    - this.canvas.pideLimiteYMin()));
-        } while (buffer < this.canvas.pideLimiteYMax() / 2 && buffer < (this.canvas.pideLimiteYMax() - 220));
-        posRanY = buffer;
-        //ciclo para hacer random a @param x
+            buffer = (int) (Math.random() * (getCanvas().pideLimiteYMax()
+                    - getCanvas().pideLimiteYMin()));
+        } while (buffer < getCanvas().pideLimiteYMax() / 2
+                && buffer < (getCanvas().pideLimiteYMax() - 220));
+        setPosRanY(buffer);
+        //ciclo para hacer random a @param columna
         do {
-            buffer = (int) (Math.random() * (this.canvas.pideLimiteXMax()
-                    - this.canvas.pideLimiteXMin()));
-        } while (buffer > this.canvas.pideLimiteXMax() && buffer < (this.canvas.pideLimiteXMax()));
-        posRanX = buffer;
+            buffer = (int) (Math.random() * (getCanvas().pideLimiteXMax()
+                    - getCanvas().pideLimiteXMin()));
+        } while (buffer > getCanvas().pideLimiteXMax()
+                && buffer < (getCanvas().pideLimiteXMax()));
+        setPosRanX(buffer);
     }
 
     public void iniciarPosicion(Lienzo canvas) {
-        this.canvas = canvas;
+        setCanvas(canvas);
         Random();
-        x = posRanX;
-        y = posRanY;
+        setColumna(getPosRanX());
+        setRenglon(getPosRanY());
+        aparecer();
+        setVidas(1);
     }
 
     @Override
-    public void mueve(Entrada e) {
-
+    public void Mueve(Entrada e) {
+        //if(isVisible()){
     }
 
     /**
@@ -66,5 +104,72 @@ public class NaveEnemiga extends ElementoGrafico {
      */
     public void setPuntos(int puntos) {
         this.puntos = puntos;
+    }
+
+    public Bala getBala() {
+        return bala;
+    }
+
+    /**
+     * @param bala the bala to set
+     */
+    public void setBala(Bala bala) {
+        this.bala = bala;
+    }
+
+    /**
+     * @return the vidas
+     */
+    public int getVidasActuales() {
+        return vidas;
+    }
+
+    /**
+     * @param vidas the vidas to set
+     */
+    public void setVidas(int vidas) {
+        this.vidas = vidas;
+    }
+
+    /**
+     * @return the posRanX
+     */
+    public int getPosRanX() {
+        return posRanX;
+    }
+
+    /**
+     * @param posRanX the posRanX to set
+     */
+    public void setPosRanX(int posRanX) {
+        this.posRanX = posRanX;
+    }
+
+    /**
+     * @return the posRanY
+     */
+    public int getPosRanY() {
+        return posRanY;
+    }
+
+    /**
+     * @param posRanY the posRanY to set
+     */
+    public void setPosRanY(int posRanY) {
+        this.posRanY = posRanY;
+    }
+
+    /**
+     * @return the danioFatal
+     */
+    public boolean isDanioFatal() {
+        return danioFatal;
+    }
+
+    /**
+     * @param danioFatal the danioFatal to set
+     */
+    public void setDanioFatal(boolean danioFatal) {
+        this.danioFatal = danioFatal;
     }
 }
