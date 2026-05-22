@@ -17,13 +17,14 @@ public class Heroe extends ElementoGrafico implements Destruible {
     private Bala bala;
     private boolean danioFatal;
     private int vidas;
+    private int puntosObtenidos;
 
     public Heroe() {
-        setNomSprite("./resources/Heroe.png");
+        setNomSprite("/resources/Heroe.png");
         inicia();
         getMiImagen().ponColorTransparente(Lienzo.BLANCO);
         bala = new Bala();
-
+        setVidas(10);
         //public void ponPuntos(int puntos)
     }
 
@@ -58,7 +59,7 @@ public class Heroe extends ElementoGrafico implements Destruible {
         setColumna(getCanvas().pideLimiteXMax() / 2);
         setRenglon(getCanvas().pideLimiteYMin() + 200);
         aparecer();
-        setVidas(1);
+
     }
 
     @Override
@@ -116,6 +117,10 @@ public class Heroe extends ElementoGrafico implements Destruible {
         }
     }
 
+    public void ponPuntos(int puntos) {
+        setPuntosObtenidos(getPuntosObtenidos() + puntos);
+    }
+
     /**
      * @return the bala
      */
@@ -154,5 +159,19 @@ public class Heroe extends ElementoGrafico implements Destruible {
      */
     public void setDanioFatal(boolean danioFatal) {
         this.danioFatal = danioFatal;
+    }
+
+    /**
+     * @return the puntosObtenidos
+     */
+    public int getPuntosObtenidos() {
+        return puntosObtenidos;
+    }
+
+    /**
+     * @param puntosObtenidos the puntosObtenidos to set
+     */
+    public void setPuntosObtenidos(int puntosObtenidos) {
+        this.puntosObtenidos = puntosObtenidos;
     }
 }

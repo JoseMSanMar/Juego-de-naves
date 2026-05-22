@@ -16,7 +16,7 @@ public class AveDePresa extends NaveEnemiga {
 
         super();
         // Pon la ruta de tu imagen enemiga
-        setNomSprite("./resources/avepresa.png");
+        setNomSprite("/resources/avepresa.png");
         inicia();
         getMiImagen().ponColorTransparente(Lienzo.BLANCO);
         //Se inicia la direccion de la nave
@@ -29,14 +29,14 @@ public class AveDePresa extends NaveEnemiga {
     public void Mueve(Entrada e) {
         //Averiguar si se sale por la derecha
         //cambiar el sentido
-        if (getRenglon() > (e.getMiCanvas().pideLimiteYMax()) - 120) {
+        if (getRenglon() > (e.getMiCanvas().pideLimiteYMax()) - 150) {
             setComponenteY(ABAJO);
         }
         //Averiguar si se sale por la izq
-        if (getRenglon() < (e.getMiCanvas().pideLimiteYMin()) + 120) {
+        if (getRenglon() < (e.getMiCanvas().pideLimiteYMin()) + 150) {
             setComponenteY(ARRIBA);
         }
-        setRenglon(getRenglon() + (getComponenteY() * 30));
+        setRenglon(getRenglon() + (getComponenteY() * 20));
 
         dispara();
 
@@ -44,12 +44,16 @@ public class AveDePresa extends NaveEnemiga {
         //Si la bala está activa, avanza UN paso en este frame
         if (getBala().getEstado() == Bala.VUELO) {
             getBala().Mueve(e);
+
+            if (getRenglon() > (e.getMiCanvas().pideLimiteYMax() - 150)) {
+                setRenglon(getRenglon() - 15);
+            }
         }
     }
 
     public void dispara() {
         // IA de disparo por probabilidad (20% de probabilidad por frame)
-        if (Math.random() < 0.2) {
+        if (Math.random() < 0.1) {
             if (getBala().getEstado() == Bala.INACTIVA) {
                 getBala().iniciarPosicion(getColumna(), getRenglon(), -60);
                 getBala().setEstado(Bala.VUELO);

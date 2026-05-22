@@ -7,7 +7,7 @@ import edu.epromero.util.ComportamientoEnemigo;
  *
  * @author user
  */
-@ComportamientoEnemigo(tipo = "Destructor", resistencia = 2, puntos = 100)
+@ComportamientoEnemigo(tipo = "Destructor", resistencia = 2, puntos = 50)
 public class Destructor extends NaveEnemiga {
 
     private int componenteX;
@@ -17,13 +17,13 @@ public class Destructor extends NaveEnemiga {
 
         super();
         // Pon la ruta de tu imagen enemiga
-        setNomSprite("./resources/enemigo.png");
+        setNomSprite("/resources/enemigo.png");
         inicia();
         getMiImagen().ponColorTransparente(Lienzo.BLANCO);
         //Se inicia la direccion de la nave
         this.componenteX = DERECHA;
         setPuntos(50);
-        setVidas(1);
+        setVidas(2);
     }
 
     @Override
@@ -45,6 +45,11 @@ public class Destructor extends NaveEnemiga {
         if (getBala().getEstado() == Bala.VUELO) {
             getBala().Mueve(e);
         }
+        // FASE DE ENTRADA: Si la nave está por encima del límite visible de juego
+        if (getRenglon() > (e.getMiCanvas().pideLimiteYMax() - 150)) {
+            // La hacemos bajar verticalmente de 15 en 15 píxeles hasta su zona de patrullaje
+            setRenglon(getRenglon() - 15);
+        }
     }
 
     public boolean hayColision(Bala bala) {
@@ -63,7 +68,7 @@ public class Destructor extends NaveEnemiga {
 
     public void dispara() {
         // IA de disparo por probabilidad (20% de probabilidad por frame)
-        if (Math.random() < 0.2) {
+        if (Math.random() < 0.1) {
             if (getBala().getEstado() == Bala.INACTIVA) {
                 getBala().iniciarPosicion(getColumna(), getRenglon(), -60);
                 getBala().setEstado(Bala.VUELO);

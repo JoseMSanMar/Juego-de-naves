@@ -20,7 +20,7 @@ public class Bala extends ElementoGrafico {
 
     public Bala() {
         super();
-        setNomSprite("./resources/bala.png");
+        setNomSprite("/resources/bala.png");
         inicia();
         getMiImagen().ponColorTransparente(Lienzo.BLANCO);
         setEstado(INACTIVA);

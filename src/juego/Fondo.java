@@ -9,7 +9,7 @@ import edu.epromero.util.Lienzo;
 public class Fondo extends ElementoGrafico {
 
     public Fondo() {
-        setNomSprite("./resources/Fondo.png");
+        setNomSprite("/resources/Fondo.png");
         // Cargamos la imagen UNA SOLA VEZ aquí
         inicia();
     }

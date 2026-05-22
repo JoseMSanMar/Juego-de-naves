@@ -21,7 +21,7 @@ public class NaveEnemiga extends ElementoGrafico implements Destruible {
 
     public NaveEnemiga() {
         super();
-        setNomSprite("./resources/enemigo.png");
+        setNomSprite("/resources/enemigo.png");
         inicia();
         getMiImagen().ponColorTransparente(Lienzo.BLANCO);
         bala = new Bala();
@@ -44,7 +44,9 @@ public class NaveEnemiga extends ElementoGrafico implements Destruible {
 
     @Override
     public boolean recibirDanio() {
-        if (getVidasActuales() <= 0) {
+        if (getVidasActuales() > 0) {
+            setDanioFatal(false);
+        } else {
             setDanioFatal(true);
         }
         return isDanioFatal();
@@ -57,6 +59,31 @@ public class NaveEnemiga extends ElementoGrafico implements Destruible {
     public void destruir(boolean danio) {
         if (danio) {
             setVisible(false);
+        }
+    }
+
+    public void reaparecer() {
+        //Se vuelve a iniciar la nave
+        Random();
+
+        //Posición inicial: X aleatoria, pero Y ARRIBA del límite del techo
+        setColumna(getPosRanX());
+        setRenglon(getCanvas().pideLimiteYMax() + 100);
+
+        //Restauramos la salud y visibilidad de la nave según su tipo
+        setVisible(true);
+        setDanioFatal(false);
+
+        // Aquí le devolvemos la vida base.
+        // De forma generica se se asigna su vida de acuerdo a los puntos
+        if (getPuntos() == 50) {
+            setVidas(2);  // Destructor
+        }
+        if (getPuntos() == 100) {
+            setVidas(2);  // AveDePresa
+        }
+        if (getPuntos() == 150) {
+            setVidas(4);  // LanzaMinas
         }
     }
 
@@ -84,7 +111,6 @@ public class NaveEnemiga extends ElementoGrafico implements Destruible {
         setColumna(getPosRanX());
         setRenglon(getPosRanY());
         aparecer();
-        setVidas(1);
     }
 
     @Override

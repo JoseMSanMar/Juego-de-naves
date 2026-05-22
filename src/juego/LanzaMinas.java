@@ -18,7 +18,7 @@ public class LanzaMinas extends NaveEnemiga {
     public LanzaMinas() {
         super();
         // Pon la ruta de tu imagen enemiga
-        setNomSprite("./resources/LanzaMinas.png");
+        setNomSprite("/resources/LanzaMinas.png");
         inicia();
         getMiImagen().ponColorTransparente(Lienzo.BLANCO);
         //Se inicia la direccion de la nave a la DERECHA
@@ -46,7 +46,7 @@ public class LanzaMinas extends NaveEnemiga {
         if (getColumna() < (e.getMiCanvas().pideLimiteXMin()) + 120) {
             setComponenteX(DERECHA);
         }
-        setColumna(getColumna() + (componenteX * 30));
+        setColumna(getColumna() + (componenteX * 10));
 
         dispara();
 
@@ -54,11 +54,15 @@ public class LanzaMinas extends NaveEnemiga {
         if (getBala().getEstado() == Bala.VUELO) {
             getBala().Mueve(e);
         }
+
+        if (getRenglon() > (e.getMiCanvas().pideLimiteYMax()) - 150) {
+            setRenglon(getRenglon() - 15);
+        }
     }
 
     public void dispara() {
         // IA de disparo por probabilidad (20% de probabilidad por frame)
-        if (Math.random() < 0.2) {
+        if (Math.random() < 0.01) {
             if (getBala().getEstado() == Bala.INACTIVA) {
                 getBala().iniciarPosicion(getColumna(), getRenglon(), -60);
                 getBala().setEstado(Bala.VUELO);
