@@ -1,6 +1,9 @@
 package juego;
 
 import edu.epromero.util.Lienzo;
+import javax.swing.JOptionPane;
+import java.awt.Font;
+import java.awt.Color;
 
 /**
  *
@@ -46,33 +49,37 @@ public class Juego {
     }
 
     public void pinta() {
-        //pintamos el lienzo canvas
-        pantalla.pinta(canvas);
-        pantalla.pintaPuntos(rebelde, canvas);
-        pantalla.pintaVidas(rebelde, canvas);
-        //Pintamos las naves
-        //rebelde
-        if (rebelde.isVisible()) {
-            rebelde.pinta(canvas);
+        if (!rebelde.isVisible()) {
+            pantalla.gameOver(rebelde, canvas);
+            canvas.mostrar(0);
+        } else {
+            //pintamos el lienzo canvas
+            pantalla.pinta(canvas);
+            pantalla.pintaPuntos(rebelde, canvas);
+            pantalla.pintaVidas(rebelde, canvas);
+            //Pintamos las naves
+            //rebelde
+            if (rebelde.isVisible()) {
+                rebelde.pinta(canvas);
+            }
+            //lanzaminas
+            if (bombardero.isVisible()) {
+                bombardero.pinta(canvas);
+            }
+            //destructor
+            if (destructor.isVisible()) {
+                destructor.pinta(canvas);
+            }
+            //avedepresa
+            if (aveDePresa.isVisible()) {
+                aveDePresa.pinta(canvas);
+            }
+            //kamikaze
+            if (kami.isVisible()) {
+                kami.pinta(canvas);
+            }
+            canvas.mostrar(0);
         }
-        //lanzaminas
-        if (bombardero.isVisible()) {
-            bombardero.pinta(canvas);
-        }
-        //destructor
-        if (destructor.isVisible()) {
-            destructor.pinta(canvas);
-        }
-        //avedepresa
-        if (aveDePresa.isVisible()) {
-            aveDePresa.pinta(canvas);
-        }
-        //kamikaze
-        if (kami.isVisible()) {
-            kami.pinta(canvas);
-        }
-        canvas.mostrar(0);
-
     }
 
     public void mover() {
@@ -110,7 +117,6 @@ public class Juego {
                 if (balasDestructor[i].getEstado() == Bala.VUELO
                         && rebelde.hayColision(balasDestructor[i])) {
                     //Reduce las vidas y evalua si la nave ya fue destruida
-                    rebelde.perderVida();
                     rebelde.recibirDanio();
                     rebelde.destruir(rebelde.isDanioFatal());
                     System.out.println("¡Impacto al Héroe por Destructor!");
@@ -123,7 +129,6 @@ public class Juego {
                 if (balasAve[i].getEstado() == Bala.VUELO
                         && rebelde.hayColision(balasAve[i])) {
                     //Reduce las vidas y evalua si la nave ya fue destruida
-                    rebelde.perderVida();
                     rebelde.recibirDanio();
                     rebelde.destruir(rebelde.isDanioFatal());
                     System.out.println("¡Impacto al Héroe por Ave de Presa!");
@@ -136,7 +141,6 @@ public class Juego {
                 if (balasBombardero[i].getEstado() == Bala.VUELO
                         && rebelde.hayColision(balasBombardero[i])) {
                     //Reduce las vidas y evalua si la nave ya fue destruida
-                    rebelde.perderVida();
                     rebelde.recibirDanio();
                     rebelde.destruir(rebelde.isDanioFatal());
                     System.out.println("¡Impacto al Héroe por Bombardero!");
@@ -148,9 +152,7 @@ public class Juego {
                 rebelde.setVidas(0);
                 rebelde.recibirDanio();
                 rebelde.destruir(rebelde.isDanioFatal());
-                kami.perderVida();
                 kami.recibirDanio();
-                kami.destruir(rebelde.isDanioFatal());
                 System.out.println("¡Impacto al Héroe por Kamikaze!");
                 kami.iniciarEsperaReaparicion();
             }
@@ -163,9 +165,7 @@ public class Juego {
                     && destructor.hayColision(rebelde.getBala())) {
                 rebelde.getBala().setEstado(Bala.INACTIVA);
                 //revisa si la nave fue destruida y almacena los puntos
-                destructor.perderVida();
                 destructor.recibirDanio();
-                destructor.destruir(destructor.isDanioFatal());
                 //reaparece la nave
                 if (destructor.isDanioFatal()) {
                     rebelde.ponPuntos(destructor.getPuntos());
@@ -177,9 +177,7 @@ public class Juego {
                     && aveDePresa.hayColision(rebelde.getBala())) {
                 rebelde.getBala().setEstado(Bala.INACTIVA);
                 //revisa si la nave fue destruida y almacena los puntos
-                aveDePresa.perderVida();
                 aveDePresa.recibirDanio();
-                aveDePresa.destruir(aveDePresa.isDanioFatal());
                 //reaparece la nave
                 if (aveDePresa.isDanioFatal()) {
                     rebelde.ponPuntos(aveDePresa.getPuntos());
@@ -191,9 +189,7 @@ public class Juego {
                     && bombardero.hayColision(rebelde.getBala())) {
                 rebelde.getBala().setEstado(Bala.INACTIVA);
                 //revisa si la nave fue destruida y almacena los puntos
-                bombardero.perderVida();
                 bombardero.recibirDanio();
-                bombardero.destruir(bombardero.isDanioFatal());
                 //reaparece la nave
                 if (bombardero.isDanioFatal()) {
                     rebelde.ponPuntos(bombardero.getPuntos());
@@ -204,9 +200,7 @@ public class Juego {
                     && kami.hayColision(rebelde.getBala())) {
                 rebelde.getBala().setEstado(Bala.INACTIVA);
                 //revisa si la nave fue destruida y almacena los puntos
-                kami.perderVida();
                 kami.recibirDanio();
-                kami.destruir(kami.isDanioFatal());
                 //reaparece la nave
                 if (kami.isDanioFatal()) {
                     rebelde.ponPuntos(kami.getPuntos());

@@ -48,6 +48,39 @@ public class Fondo extends ElementoGrafico {
         canvas.ponColorLapiz(Color.yellow);
         canvas.texto(canvas.pideLimiteXMax() - 120, canvas.pideLimiteYMin()
                 + 40, "Vidas: " + heroe.getVidasActuales());
+        if (heroe.getVidasActuales() == 2) {
+            canvas.ponColorLapiz(Color.yellow);
+            canvas.texto(canvas.pideLimiteXMax() - 140, canvas.pideLimiteYMin()
+                    + 120, "¡CUIDADO!");
+        }
+        if (heroe.getVidasActuales() == 1) {
+            canvas.ponColorLapiz(Color.red);
+            canvas.texto(canvas.pideLimiteXMax() - 160, canvas.pideLimiteYMin()
+                    + 80, "¡¡PELIGRO!!");
+        }
+    }
+
+    public void gameOver(Heroe heroe, Lienzo canvas) {
+        setCanvas(canvas);
+
+        // 1. Limpiamos dibujando el fondo negro o el tapiz de nuevo
+        pinta(canvas);
+
+        // 2. Calculamos los centros exactos del mapa
+        double centroX = (canvas.pideLimiteXMin() + canvas.pideLimiteXMax() / 2);
+        double centroY = (canvas.pideLimiteYMin() + canvas.pideLimiteYMax()) / 2;
+
+        // 3. Letrero de GAME OVER
+        Font fuenteGameOver = new Font("Arial", Font.BOLD, 72);
+        canvas.ponFuente(fuenteGameOver);
+        canvas.ponColorLapiz(Color.red);
+        canvas.texto(centroX + 50, centroY + 50, "GAME OVER"); // Un pequeño ajuste en X para centrar el texto largo
+
+        // 4. Mostrar el puntaje final obtenido abajo del letrero
+        Font fuentePuntos = new Font("Arial", Font.BOLD, 36);
+        canvas.ponFuente(fuentePuntos);
+        canvas.ponColorLapiz(Color.yellow);
+        canvas.texto(centroX + 50, centroY - 50, "Puntaje Final: " + heroe.getPuntosObtenidos());
     }
 
 }

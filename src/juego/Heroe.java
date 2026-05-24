@@ -18,13 +18,14 @@ public class Heroe extends ElementoGrafico implements Destruible {
     private int vidas;
     private int puntosObtenidos;
     private Bala bala;
+    private String nombre = "piloto";
 
     public Heroe() {
         setNomSprite("/resources/Heroe.png");
         inicia();
         getMiImagen().ponColorTransparente(Lienzo.BLANCO);
         bala = new Bala();
-        setVidas(10);
+        setVidas(1);
         //public void ponPuntos(int puntos)
     }
 
@@ -38,8 +39,12 @@ public class Heroe extends ElementoGrafico implements Destruible {
 
     @Override
     public boolean recibirDanio() {
-        if (getVidasActuales() <= 0) {
+        setDanioFatal(false);
+        if (getVidasActuales() - 1 <= 0) {
+            perderVida();
             setDanioFatal(true);
+        } else {
+            perderVida();
         }
         return isDanioFatal();
     }
@@ -186,5 +191,24 @@ public class Heroe extends ElementoGrafico implements Destruible {
      */
     public void setBala(Bala bala) {
         this.bala = bala;
+    }
+
+    /**
+     * @return the nombre
+     */
+    public String getNombre() {
+        return nombre;
+    }
+
+    /**
+     * @param nombre the nombre to set
+     */
+    public void setNombre(String nombre) {
+        // Si el jugador le da aceptar sin escribir nada, le dejamos el nombre por defecto
+        if (nombre == null || nombre.trim().isEmpty()) {
+            this.nombre = "Rebelde Anonimo";
+        } else {
+            this.nombre = nombre;
+        }
     }
 }

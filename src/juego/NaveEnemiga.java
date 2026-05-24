@@ -48,22 +48,22 @@ public class NaveEnemiga extends ElementoGrafico implements Destruible {
 
     @Override
     public boolean recibirDanio() {
-        if (getVidasActuales() > 0) {
-            setDanioFatal(false);
-        } else {
+        setDanioFatal(false);
+        if (getVidasActuales() - 1 <= 0) {
+            perderVida();
             setDanioFatal(true);
+            if (isDanioFatal()) {
+                setVisible(false);
+            }
+        } else {
+            perderVida();
         }
+
         return isDanioFatal();
     }
 
     public void perderVida() {
         setVidas(getVidasActuales() - 1);
-    }
-
-    public void destruir(boolean danio) {
-        if (danio) {
-            setVisible(false);
-        }
     }
 
     public void reaparecer() {
