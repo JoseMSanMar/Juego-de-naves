@@ -1,6 +1,5 @@
 package juego;
 
-import edu.epromero.util.Imagen;
 import edu.epromero.util.Lienzo;
 
 /**
@@ -12,11 +11,12 @@ public class Bala extends ElementoGrafico {
     public static final int INACTIVA = 0;
     public static final int VUELO = 1;
     public static final int EXPLOTANDO = 2;
+    //Reciben data de la nave
     private int estado;
     private int ciclosExplosion;
-    private Lienzo lienzo;
-    private Imagen miImagen;
-    private double direccionY = 30;
+    //Direccion default
+    private double direccionY = 0;
+    private double direccionX = 0;
 
     public Bala() {
         super();
@@ -27,12 +27,16 @@ public class Bala extends ElementoGrafico {
 
     }
 
-    public void iniciarPosicion(double x, double y, double direccionY) {
+    //inicia la pocision de la bala
+    public void iniciarPosicion(double x, double y,
+            double direccionX, double direccionY) {
         setColumna(x);
         setRenglon(y);
+        this.direccionX = direccionX;
         this.direccionY = direccionY;
     }
 
+    //pinta la img de la bala
     public void pinta(Lienzo canvas) {
         setCanvas(canvas);
         canvas.dibujo(getColumna(), getRenglon(), getMiImagen());
@@ -40,13 +44,17 @@ public class Bala extends ElementoGrafico {
 
     @Override
     public void Mueve(Entrada e) {
+        //Si la bala esta en vuelo se mueve
         if (getEstado() == VUELO) {
             setRenglon(getRenglon() + direccionY);
+            setColumna(getColumna() + direccionX);
+            //Si ya esta fuera de la pantalla se apaga
             if (getRenglon() >= e.getMiCanvas().pideLimiteYMax()
                     || getRenglon() <= e.getMiCanvas().pideLimiteYMin()) {
                 setEstado(INACTIVA);
             }
         }
+        //Inicia animacion de explosion
         if (getEstado() == EXPLOTANDO) {
             setCiclosExplosion(getCiclosExplosion() + 1);
             if (getCiclosExplosion() >= 3) {
@@ -56,7 +64,9 @@ public class Bala extends ElementoGrafico {
         }
     }
 
+    //Recibe el estado de la bala
     public void setEstado(int estado) {
+        //revisa que el estado sea valido
         if (estado < 0 || estado > 2) {
             throw new IllegalArgumentException("Error de estado.");
         } else {
@@ -67,6 +77,9 @@ public class Bala extends ElementoGrafico {
         }
     }
 
+    /**
+     * @return the estado
+     */
     public int getEstado() {
         return estado;
     }
@@ -74,20 +87,6 @@ public class Bala extends ElementoGrafico {
     /**
      * @return the posicion
      */
-    /**
-     * @return the lienzo
-     */
-    public Lienzo getLienzo() {
-        return lienzo;
-    }
-
-    /**
-     * @param lienzo the lienzo to set
-     */
-    public void setLienzo(Lienzo lienzo) {
-        this.lienzo = lienzo;
-    }
-
     /**
      * @return the ciclosExplosion
      */

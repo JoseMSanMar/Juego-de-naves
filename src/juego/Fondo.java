@@ -1,6 +1,8 @@
 package juego;
 
 import edu.epromero.util.Lienzo;
+import java.awt.Color;
+import java.awt.Font;
 
 /**
  *
@@ -31,4 +33,21 @@ public class Fondo extends ElementoGrafico {
     public void Mueve(Entrada e) {
 
     }
+
+    public void pintaPuntos(Heroe heroe, Lienzo canvas) {
+        Font fuente = new Font("Arial", Font.BOLD, 36);
+        canvas.ponFuente(fuente);
+        canvas.ponColorLapiz(Color.yellow);
+        canvas.texto(canvas.pideLimiteXMin() + 120, canvas.pideLimiteYMin()
+                + 40, "Puntaje: " + heroe.getPuntosObtenidos());
+    }
+
+    public void pintaVidas(Heroe heroe, Lienzo canvas) {
+        Font fuente = new Font("Arial", Font.BOLD, 36);
+        canvas.ponFuente(fuente);
+        canvas.ponColorLapiz(Color.yellow);
+        canvas.texto(canvas.pideLimiteXMax() - 120, canvas.pideLimiteYMin()
+                + 40, "Vidas: " + heroe.getVidasActuales());
+    }
+
 }

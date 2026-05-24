@@ -12,33 +12,37 @@ public class NaveEnemiga extends ElementoGrafico implements Destruible {
     /**
      * @return the miImagen
      */
-    private int posRanX;
-    private int posRanY;
+    private double posRanX;
+    private double posRanY;
     private int puntos;
-    private Bala bala;
+    private Bala[] cargador;
     private boolean danioFatal;
     private int vidas;
+    private boolean esperandoReaparecer = false;
+    private int framesDeEspera = 0;
 
     public NaveEnemiga() {
         super();
         setNomSprite("/resources/enemigo.png");
         inicia();
         getMiImagen().ponColorTransparente(Lienzo.BLANCO);
-        bala = new Bala();
-
-        aparecer();
+        cargador = new Bala[3];
+        for (int i = 0; i < cargador.length; i++) {
+            cargador[i] = new Bala();
+        }
+        setVisible(false);
     }
 
     public void pinta(Lienzo canvas) {
-        //asignamos el canvas a local
         setCanvas(canvas);
-        //if(isVisible()){
-        // dibujamos la NaveEnemiga
         canvas.dibujo(getColumna(), getRenglon(), this.getMiImagen());
-        //Revisamos si la bala esta activa
-        if (getBala().getEstado() != Bala.INACTIVA) {
-            //Se dibuja la bala
-            getBala().pinta(getCanvas());
+
+        // Ciclo tradicional: recorremos desde 0 hasta el límite del cargador
+        Bala[] listaBalas = getCargador();
+        for (int i = 0; i < listaBalas.length; i++) {
+            if (listaBalas[i].getEstado() != Bala.INACTIVA) {
+                listaBalas[i].pinta(getCanvas());
+            }
         }
     }
 
@@ -88,21 +92,19 @@ public class NaveEnemiga extends ElementoGrafico implements Destruible {
     }
 
     public void Random() {
-        int buffer;
-        //ciclo para hacer random a @param renglon
-        do {
-            buffer = (int) (Math.random() * (getCanvas().pideLimiteYMax()
-                    - getCanvas().pideLimiteYMin()));
-        } while (buffer < getCanvas().pideLimiteYMax() / 2
-                && buffer < (getCanvas().pideLimiteYMax() - 220));
-        setPosRanY(buffer);
-        //ciclo para hacer random a @param columna
-        do {
-            buffer = (int) (Math.random() * (getCanvas().pideLimiteXMax()
-                    - getCanvas().pideLimiteXMin()));
-        } while (buffer > getCanvas().pideLimiteXMax()
-                && buffer < (getCanvas().pideLimiteXMax()));
-        setPosRanX(buffer);
+        // --- LÍMITES PARA EL EJE X (Columnas) ---
+        // Queremos que aparezca entre el límite mínimo y el límite máximo
+        double minX = getCanvas().pideLimiteXMin() + 120;
+        double maxX = getCanvas().pideLimiteXMax() - 120;
+        double xAleatoria = minX + (Math.random() * (maxX - minX));
+        setPosRanX(xAleatoria);
+
+        // --- LÍMITES PARA EL EJE Y (Renglones) ---
+        // Para que aparezcan en la mitad SUPERIOR de la pantalla:
+        double minY = getCanvas().pideLimiteYMax() / 2;
+        double maxY = getCanvas().pideLimiteYMax() - 150;
+        double yAleatoria = minY + (int) (Math.random() * (maxY - minY));
+        setPosRanY(yAleatoria);
     }
 
     public void iniciarPosicion(Lienzo canvas) {
@@ -111,6 +113,26 @@ public class NaveEnemiga extends ElementoGrafico implements Destruible {
         setColumna(getPosRanX());
         setRenglon(getPosRanY());
         aparecer();
+    }
+
+    public void iniciarEsperaReaparicion() {
+        this.esperandoReaparecer = true;
+        this.framesDeEspera = 60;
+        // Nos aseguramos de que no se vea ni colisione
+        setVisible(false);
+    }
+
+    // Método que actualiza el reloj en cada frame
+    public void actualizarTemporizador() {
+        if (esperandoReaparecer) {
+            framesDeEspera--; // Restamos un frame en cada ciclo
+
+            if (framesDeEspera <= 0) {
+                esperandoReaparecer = false;
+                // ¡Despierta y se posiciona arriba automáticamente!
+                reaparecer();
+            }
+        }
     }
 
     @Override
@@ -132,17 +154,6 @@ public class NaveEnemiga extends ElementoGrafico implements Destruible {
         this.puntos = puntos;
     }
 
-    public Bala getBala() {
-        return bala;
-    }
-
-    /**
-     * @param bala the bala to set
-     */
-    public void setBala(Bala bala) {
-        this.bala = bala;
-    }
-
     /**
      * @return the vidas
      */
@@ -160,28 +171,28 @@ public class NaveEnemiga extends ElementoGrafico implements Destruible {
     /**
      * @return the posRanX
      */
-    public int getPosRanX() {
+    public double getPosRanX() {
         return posRanX;
     }
 
     /**
      * @param posRanX the posRanX to set
      */
-    public void setPosRanX(int posRanX) {
+    public void setPosRanX(double posRanX) {
         this.posRanX = posRanX;
     }
 
     /**
      * @return the posRanY
      */
-    public int getPosRanY() {
+    public double getPosRanY() {
         return posRanY;
     }
 
     /**
      * @param posRanY the posRanY to set
      */
-    public void setPosRanY(int posRanY) {
+    public void setPosRanY(double posRanY) {
         this.posRanY = posRanY;
     }
 
@@ -197,5 +208,16 @@ public class NaveEnemiga extends ElementoGrafico implements Destruible {
      */
     public void setDanioFatal(boolean danioFatal) {
         this.danioFatal = danioFatal;
+    }
+
+    /**
+     * @return the cargador
+     */
+    public Bala[] getCargador() {
+        return cargador;
+    }
+
+    public boolean isEsperandoReaparecer() {
+        return esperandoReaparecer;
     }
 }

@@ -27,36 +27,50 @@ public class AveDePresa extends NaveEnemiga {
 
     @Override
     public void Mueve(Entrada e) {
-        //Averiguar si se sale por la derecha
-        //cambiar el sentido
+        //**********CONTROL DEL MOVIMIENTO Y DIRECCION*********
+        //Averiguar si se acerca al techo
         if (getRenglon() > (e.getMiCanvas().pideLimiteYMax()) - 150) {
             setComponenteY(ABAJO);
         }
-        //Averiguar si se sale por la izq
+        //Averiguar si se acerca al lim inferior
         if (getRenglon() < (e.getMiCanvas().pideLimiteYMin()) + 150) {
             setComponenteY(ARRIBA);
         }
         setRenglon(getRenglon() + (getComponenteY() * 20));
-
+        //**********CONTROL DE LOS DISPAROS Y LAS BALAS**********
+        Bala[] cartucho = getCargador();
+        //Lee si la nave disparo
         dispara();
-
         // ACTUALIZACIÓN DE LA BALA:
         //Si la bala está activa, avanza UN paso en este frame
-        if (getBala().getEstado() == Bala.VUELO) {
-            getBala().Mueve(e);
-
-            if (getRenglon() > (e.getMiCanvas().pideLimiteYMax() - 150)) {
-                setRenglon(getRenglon() - 15);
-            }
+        if (cartucho[0].getEstado() == Bala.VUELO) {
+            cartucho[0].Mueve(e);
+        }
+        //**********CONTROL DE REAPARICIONDE LA NAVE**********
+        // FASE DE ENTRADA: Si la nave está por encima del límite
+        //visible de juego
+        if (getColumna() > getPosRanX()) {
+            setColumna(getColumna() - 15);
+        }
+        if (getColumna() < getPosRanX()) {
+            setColumna(getColumna() + 15);
         }
     }
 
     public void dispara() {
-        // IA de disparo por probabilidad (20% de probabilidad por frame)
-        if (Math.random() < 0.1) {
-            if (getBala().getEstado() == Bala.INACTIVA) {
-                getBala().iniciarPosicion(getColumna(), getRenglon(), -60);
-                getBala().setEstado(Bala.VUELO);
+        // IA de disparo por probabilidad (8% de probabilidad por frame)
+        if (Math.random() < 0.08) {
+            //INICIAMOS el arreglo porque hereda de NaveEnemiga aunque
+            //sea solo uno
+            Bala[] cartucho = getCargador();
+            // Verificamos si no hay balas ya activas
+            boolean cargadorListo = true;
+            if (cartucho[0].getEstado() != Bala.INACTIVA) {
+                cargadorListo = false;
+            }
+            if (cargadorListo) {
+                cartucho[0].iniciarPosicion(getColumna(), getRenglon(), 0, -40);
+                cartucho[0].setEstado(Bala.VUELO);
             }
         }
     }
@@ -73,6 +87,28 @@ public class AveDePresa extends NaveEnemiga {
         }
 
         return siHayColision;
+    }
+
+    @Override
+    public void reaparecer() {
+        //Se vuelve a iniciar la nave
+        Random();
+
+        //Posición inicial: Y aleatoria, pero X a la derecha del limite
+        setRenglon(getPosRanY());
+        //Si su getPosRanX es a la derecha, entra desde la  derecha
+        if (getPosRanX() > getCanvas().pideLimiteXMax() / 2) {
+            setColumna(getCanvas().pideLimiteXMax() + 100);
+        }
+        //Si su getPosRanX es a la iaquierda, entra desde la izquierda
+        if (getPosRanX() < getCanvas().pideLimiteXMax() / 2) {
+            setColumna(getCanvas().pideLimiteXMin() - 100);
+        }
+        //Restauramos la salud y visibilidad de la nave según su tipo
+        setVisible(true);
+        setDanioFatal(false);
+        // Aquí le devolvemos la vida base.
+        setVidas(2);  // AveDePresa
     }
 
     /**

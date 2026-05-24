@@ -14,10 +14,10 @@ import static java.awt.event.KeyEvent.VK_SPACE;
  */
 public class Heroe extends ElementoGrafico implements Destruible {
 
-    private Bala bala;
     private boolean danioFatal;
     private int vidas;
     private int puntosObtenidos;
+    private Bala bala;
 
     public Heroe() {
         setNomSprite("/resources/Heroe.png");
@@ -100,7 +100,20 @@ public class Heroe extends ElementoGrafico implements Destruible {
                 }
             }
         }
+        return siHayColision;
+    }
 
+    //Colsion especial para el Kamikaze
+    public boolean hayColisionNave(Kamikaze kami) {
+        boolean siHayColision;
+        siHayColision = false;
+        if (getRenglon() < kami.getRenglon() + 80
+                && getRenglon() > kami.getRenglon() - 80) {
+            if (getColumna() < kami.getColumna() + 80
+                    && getColumna() > kami.getColumna() - 80) {
+                siHayColision = true;
+            }
+        }
         return siHayColision;
     }
 
@@ -110,7 +123,7 @@ public class Heroe extends ElementoGrafico implements Destruible {
             //Solo puedes disparar si no hay otra bala tuya en vuelo
             if (getBala().getEstado() == Bala.INACTIVA) {
                 // La bala nace JUSTO en la posición actual de la nave
-                getBala().iniciarPosicion(getColumna(), getRenglon(), 80);
+                getBala().iniciarPosicion(getColumna(), getRenglon(), 0, 80);
                 // Le damos luz verde para que empiece a volar
                 getBala().setEstado(Bala.VUELO);
             }
@@ -119,20 +132,6 @@ public class Heroe extends ElementoGrafico implements Destruible {
 
     public void ponPuntos(int puntos) {
         setPuntosObtenidos(getPuntosObtenidos() + puntos);
-    }
-
-    /**
-     * @return the bala
-     */
-    public Bala getBala() {
-        return bala;
-    }
-
-    /**
-     * @param bala the bala to set
-     */
-    public void setBala(Bala bala) {
-        this.bala = bala;
     }
 
     @Override
@@ -173,5 +172,19 @@ public class Heroe extends ElementoGrafico implements Destruible {
      */
     public void setPuntosObtenidos(int puntosObtenidos) {
         this.puntosObtenidos = puntosObtenidos;
+    }
+
+    /**
+     * @return the bala
+     */
+    public Bala getBala() {
+        return bala;
+    }
+
+    /**
+     * @param bala the bala to set
+     */
+    public void setBala(Bala bala) {
+        this.bala = bala;
     }
 }

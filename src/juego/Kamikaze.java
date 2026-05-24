@@ -1,29 +1,29 @@
 package juego;
 
-import edu.epromero.util.Lienzo;
 import edu.epromero.util.ComportamientoEnemigo;
+import edu.epromero.util.Lienzo;
 
 /**
  *
  * @author user
  */
-@ComportamientoEnemigo(tipo = "Destructor", resistencia = 2, puntos = 50)
-public class Destructor extends NaveEnemiga {
+@ComportamientoEnemigo(tipo = "Generico", resistencia = 1, puntos = 10)
+public class Kamikaze extends NaveEnemiga {
 
     private int componenteX;
     private int componenteY;
 
-    public Destructor() {
-
+    public Kamikaze() {
         super();
         // Pon la ruta de tu imagen enemiga
-        setNomSprite("/resources/Destructor.png");
+        setNomSprite("/resources/enemigo.png");
         inicia();
         getMiImagen().ponColorTransparente(Lienzo.BLANCO);
         //Se inicia la direccion de la nave
         this.componenteX = DERECHA;
-        setPuntos(50);
-        setVidas(2);
+        this.componenteY = ARRIBA;
+        setPuntos(10);
+        setVidas(1);
     }
 
     @Override
@@ -37,17 +37,17 @@ public class Destructor extends NaveEnemiga {
         if (getColumna() < (e.getMiCanvas().pideLimiteXMin()) + 120) {
             setComponenteX(DERECHA);
         }
-        //actualiza la pocision de la nave
-        setColumna(getColumna() + (componenteX * 30));
-        //**********CONTROL DE LOS DISPAROS Y LAS BALAS**********
-        Bala[] cartucho = getCargador();
-        //Lee si la nave disparó
-        dispara();
-
-        // ACTUALIZACIÓN DE LA BALA: Si la bala está activa, avanza UN paso
-        if (cartucho[0].getEstado() == Bala.VUELO) {
-            cartucho[0].Mueve(e);
+        //Averiguar si se acerca al techo
+        if (getRenglon() > (e.getMiCanvas().pideLimiteYMax()) - 120) {
+            setComponenteY(ABAJO);
         }
+        //Averiguar si se acerca al lim inferior
+        if (getRenglon() < (e.getMiCanvas().pideLimiteYMin()) + 150) {
+            setComponenteY(ARRIBA);
+        }
+        //actualiza la pocision de la nave
+        setRenglon(getRenglon() + (getComponenteY() * 30));
+        setColumna(getColumna() + (getComponenteX() * 30));
         //**********CONTROL DE REAPARICION DE LA NAVE**********
         // FASE DE ENTRADA: Si la nave está por encima del límite
         //visible de juego
@@ -71,37 +71,6 @@ public class Destructor extends NaveEnemiga {
         return siHayColision;
     }
 
-    public void dispara() {
-
-        // IA de disparo por probabilidad (8% de probabilidad por frame)
-        if (Math.random() < 0.08) {
-            //INICIAMOS el arreglo porque hereda de NaveEnemiga aunque
-            //sea solo uno
-            Bala[] cartucho = getCargador();
-            // Verificamos si no hay balas ya activas
-            boolean cargadorListo = true;
-            if (cartucho[0].getEstado() != Bala.INACTIVA) {
-                cargadorListo = false;
-            }
-            if (cargadorListo) {
-                //Colocamos la probabilidad de disparo por lado del  50%
-                if (Math.random() < 0.5) {
-                    cartucho[0].iniciarPosicion(getColumna(),
-                            getRenglon(), -15, -40);
-                    cartucho[0].setEstado(Bala.VUELO);
-                }
-                if (Math.random() > 0.5) {
-                    cartucho[0].iniciarPosicion(getColumna(),
-                            getRenglon(), 15, -40);
-                    cartucho[0].setEstado(Bala.VUELO);
-                }
-            }
-        }
-    }
-
-    /**
-     * @return the bala
-     */
     /**
      * @return the componenteX
      */
@@ -129,4 +98,5 @@ public class Destructor extends NaveEnemiga {
     public void setComponenteY(int componenteY) {
         this.componenteY = componenteY;
     }
+
 }

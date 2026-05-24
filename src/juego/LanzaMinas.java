@@ -17,7 +17,7 @@ public class LanzaMinas extends NaveEnemiga {
 
     public LanzaMinas() {
         super();
-        // Pon la ruta de tu imagen enemiga
+        //Ruta de tu imagen enemiga
         setNomSprite("/resources/LanzaMinas.png");
         inicia();
         getMiImagen().ponColorTransparente(Lienzo.BLANCO);
@@ -33,46 +33,70 @@ public class LanzaMinas extends NaveEnemiga {
         Random();
         setColumna(getPosRanX());
         setRenglon(getCanvas().pideLimiteYMax() - 60);
+        aparecer();
     }
 
     @Override
     public void Mueve(Entrada e) {
-        //Averiguar si se sale por la derecha
-        //cambiar el sentido
+        //Patrullaje horizontal
         if (getColumna() > (e.getMiCanvas().pideLimiteXMax()) - 120) {
             setComponenteX(IZQUIERDA);
         }
-        //Averiguar si se sale por la izq
         if (getColumna() < (e.getMiCanvas().pideLimiteXMin()) + 120) {
             setComponenteX(DERECHA);
         }
-        setColumna(getColumna() + (componenteX * 10));
+        setColumna(getColumna() + (getComponenteX() * 10));
 
         dispara();
 
-        // ACTUALIZACIÓN DE LA BALA: Si la bala está activa, avanza UN paso
-        if (getBala().getEstado() == Bala.VUELO) {
-            getBala().Mueve(e);
+        // Ciclo para mover las balas que estén volando
+        Bala[] listaBalas = getCargador();
+        for (int i = 0; i < listaBalas.length; i++) {
+            if (listaBalas[i].getEstado() == Bala.VUELO) {
+                listaBalas[i].Mueve(e);
+            }
         }
 
+        // Fase de reaparición / entrada suave
         if (getRenglon() > (e.getMiCanvas().pideLimiteYMax()) - 150) {
             setRenglon(getRenglon() - 15);
         }
     }
 
     public void dispara() {
-        // IA de disparo por probabilidad (20% de probabilidad por frame)
-        if (Math.random() < 0.01) {
-            if (getBala().getEstado() == Bala.INACTIVA) {
-                getBala().iniciarPosicion(getColumna(), getRenglon(), -60);
-                getBala().setEstado(Bala.VUELO);
+        if (Math.random() < 0.08) { // 8% de probabilidad por frame
+            Bala[] lista = getCargador();
+
+            // Verificamos si todo el cargador está despejado
+            boolean cargadorListo = true;
+            for (int i = 0; i < lista.length; i++) {
+                if (lista[i].getEstado() != Bala.INACTIVA) {
+                    cargadorListo = false;
+                }
+            }
+
+            // Si las 3 casillas están libres, desatamos el ataque triple
+            if (cargadorListo) {
+                // Bala 0 Se abre en diagonal hacia la izquierda (-20)
+                lista[0].iniciarPosicion(getColumna(), getRenglon(), -15, -40);
+                lista[0].setEstado(Bala.VUELO);
+
+                // Bala 1 Cae recta en vertical (0)
+                lista[1].iniciarPosicion(getColumna(), getRenglon(), 0, -40);
+                lista[1].setEstado(Bala.VUELO);
+
+                // Bala 2 Se abre en diagonal hacia la derecha (+20)
+                lista[2].iniciarPosicion(getColumna(), getRenglon(), 15, -40);
+                lista[2].setEstado(Bala.VUELO);
             }
         }
     }
 
     public boolean hayColision(Bala bala) {
+        //Declaramos por defecto la colision en false
         boolean siHayColision;
         siHayColision = false;
+        //Evalua el area de colision de la nave
         if (getRenglon() < bala.getRenglon() + 80
                 && getRenglon() > bala.getRenglon() - 80) {
             if (getColumna() < bala.getColumna() + 80
@@ -80,7 +104,7 @@ public class LanzaMinas extends NaveEnemiga {
                 siHayColision = true;
             }
         }
-
+        //Regresa el resultado de la evaluacion
         return siHayColision;
     }
 
