@@ -1,6 +1,7 @@
 package juego;
 
 import edu.epromero.util.Destruible;
+import edu.epromero.util.FabricaAudio;
 import edu.epromero.util.Lienzo;
 
 /**
@@ -53,6 +54,8 @@ public class NaveEnemiga extends ElementoGrafico implements Destruible {
             perderVida();
             setDanioFatal(true);
             if (isDanioFatal()) {
+                FabricaAudio miAudio = new FabricaAudio();
+                miAudio.reproducir(".//src//explosion.wav");
                 setVisible(false);
             }
         } else {
@@ -69,7 +72,8 @@ public class NaveEnemiga extends ElementoGrafico implements Destruible {
     public void reaparecer() {
         //Se vuelve a iniciar la nave
         Random();
-
+        FabricaAudio miAudio = new FabricaAudio();
+        miAudio.reproducir(".//src//avion.wav");
         //Posición inicial: X aleatoria, pero Y ARRIBA del límite del techo
         setColumna(getPosRanX());
         setRenglon(getCanvas().pideLimiteYMax() + 100);
@@ -94,15 +98,15 @@ public class NaveEnemiga extends ElementoGrafico implements Destruible {
     public void Random() {
         // --- LÍMITES PARA EL EJE X (Columnas) ---
         // Queremos que aparezca entre el límite mínimo y el límite máximo
-        double minX = getCanvas().pideLimiteXMin() + 120;
-        double maxX = getCanvas().pideLimiteXMax() - 120;
+        double minX = getCanvas().pideLimiteXMin() + 180;
+        double maxX = getCanvas().pideLimiteXMax() - 180;
         double xAleatoria = minX + (Math.random() * (maxX - minX));
         setPosRanX(xAleatoria);
 
         // --- LÍMITES PARA EL EJE Y (Renglones) ---
         // Para que aparezcan en la mitad SUPERIOR de la pantalla:
         double minY = getCanvas().pideLimiteYMax() / 2;
-        double maxY = getCanvas().pideLimiteYMax() - 150;
+        double maxY = getCanvas().pideLimiteYMax() - 180;
         double yAleatoria = minY + (int) (Math.random() * (maxY - minY));
         setPosRanY(yAleatoria);
     }

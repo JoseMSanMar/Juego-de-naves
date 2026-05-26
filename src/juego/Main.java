@@ -1,5 +1,7 @@
 package juego;
 
+import edu.epromero.util.FabricaAudio;
+
 /**
  *
  * @author user
@@ -12,12 +14,14 @@ public class Main {
     public static void main(String[] args) {
         Juego play;
         play = new Juego();
-
+        FabricaAudio miAudio = new FabricaAudio();
+        miAudio.reproducir(".//src//music.wav");
         while (true) {
+
             play.mover();
             play.pinta();
             try {
-                Thread.sleep(20);
+                Thread.sleep(40);
                 //play.mover();
             } catch (InterruptedException ex) {
                 System.getLogger(Main.class.getName()).

@@ -3,6 +3,7 @@ package juego;
 import edu.epromero.util.Lienzo;
 import static juego.ElementoGrafico.DERECHA;
 import edu.epromero.util.ComportamientoEnemigo;
+import edu.epromero.util.FabricaAudio;
 
 /**
  *
@@ -20,7 +21,6 @@ public class LanzaMinas extends NaveEnemiga {
         //Ruta de tu imagen enemiga
         setNomSprite("/resources/LanzaMinas.png");
         inicia();
-        getMiImagen().ponColorTransparente(Lienzo.BLANCO);
         //Se inicia la direccion de la nave a la DERECHA
         this.componenteX = DERECHA;
         setPuntos(150);
@@ -39,10 +39,10 @@ public class LanzaMinas extends NaveEnemiga {
     @Override
     public void Mueve(Entrada e) {
         //Patrullaje horizontal
-        if (getColumna() > (e.getMiCanvas().pideLimiteXMax()) - 120) {
+        if (getColumna() > (e.getMiCanvas().pideLimiteXMax()) - 200) {
             setComponenteX(IZQUIERDA);
         }
-        if (getColumna() < (e.getMiCanvas().pideLimiteXMin()) + 120) {
+        if (getColumna() < (e.getMiCanvas().pideLimiteXMin()) + 200) {
             setComponenteX(DERECHA);
         }
         setColumna(getColumna() + (getComponenteX() * 10));
@@ -77,16 +77,18 @@ public class LanzaMinas extends NaveEnemiga {
 
             // Si las 3 casillas están libres, desatamos el ataque triple
             if (cargadorListo) {
+                FabricaAudio miAudio = new FabricaAudio();
+                miAudio.reproducir(".//src//disparo.wav");
                 // Bala 0 Se abre en diagonal hacia la izquierda (-20)
-                lista[0].iniciarPosicion(getColumna(), getRenglon(), -15, -40);
+                lista[0].iniciarPosicion(getColumna(), getRenglon(), -15, -30);
                 lista[0].setEstado(Bala.VUELO);
 
                 // Bala 1 Cae recta en vertical (0)
-                lista[1].iniciarPosicion(getColumna(), getRenglon(), 0, -40);
+                lista[1].iniciarPosicion(getColumna(), getRenglon(), 0, -30);
                 lista[1].setEstado(Bala.VUELO);
 
                 // Bala 2 Se abre en diagonal hacia la derecha (+20)
-                lista[2].iniciarPosicion(getColumna(), getRenglon(), 15, -40);
+                lista[2].iniciarPosicion(getColumna(), getRenglon(), 15, -30);
                 lista[2].setEstado(Bala.VUELO);
             }
         }

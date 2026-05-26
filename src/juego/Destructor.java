@@ -2,6 +2,7 @@ package juego;
 
 import edu.epromero.util.Lienzo;
 import edu.epromero.util.ComportamientoEnemigo;
+import edu.epromero.util.FabricaAudio;
 
 /**
  *
@@ -19,7 +20,6 @@ public class Destructor extends NaveEnemiga {
         // Pon la ruta de tu imagen enemiga
         setNomSprite("/resources/Destructor.png");
         inicia();
-        getMiImagen().ponColorTransparente(Lienzo.BLANCO);
         //Se inicia la direccion de la nave
         this.componenteX = DERECHA;
         setPuntos(50);
@@ -30,11 +30,11 @@ public class Destructor extends NaveEnemiga {
     public void Mueve(Entrada e) {
         //**********CONTROL DEL MOVIMIENTO Y DIRECCION*********
         //Averiguar si se acerca a la derecha
-        if (getColumna() > (e.getMiCanvas().pideLimiteXMax()) - 120) {
+        if (getColumna() > (e.getMiCanvas().pideLimiteXMax()) - 180) {
             setComponenteX(IZQUIERDA);
         }
         //Averiguar si se acerca a la izquierda
-        if (getColumna() < (e.getMiCanvas().pideLimiteXMin()) + 120) {
+        if (getColumna() < (e.getMiCanvas().pideLimiteXMin()) + 180) {
             setComponenteX(DERECHA);
         }
         //actualiza la pocision de la nave
@@ -84,15 +84,17 @@ public class Destructor extends NaveEnemiga {
                 cargadorListo = false;
             }
             if (cargadorListo) {
+                FabricaAudio miAudio = new FabricaAudio();
+                miAudio.reproducir(".//src//disparo.wav");
                 //Colocamos la probabilidad de disparo por lado del  50%
                 if (Math.random() < 0.5) {
                     cartucho[0].iniciarPosicion(getColumna(),
-                            getRenglon(), -15, -40);
+                            getRenglon(), -15, -30);
                     cartucho[0].setEstado(Bala.VUELO);
                 }
                 if (Math.random() > 0.5) {
                     cartucho[0].iniciarPosicion(getColumna(),
-                            getRenglon(), 15, -40);
+                            getRenglon(), 15, -30);
                     cartucho[0].setEstado(Bala.VUELO);
                 }
             }

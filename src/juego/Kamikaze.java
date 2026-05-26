@@ -18,7 +18,6 @@ public class Kamikaze extends NaveEnemiga {
         // Pon la ruta de tu imagen enemiga
         setNomSprite("/resources/enemigo.png");
         inicia();
-        getMiImagen().ponColorTransparente(Lienzo.BLANCO);
         //Se inicia la direccion de la nave
         this.componenteX = DERECHA;
         this.componenteY = ARRIBA;
@@ -46,7 +45,7 @@ public class Kamikaze extends NaveEnemiga {
             setComponenteY(ARRIBA);
         }
         //actualiza la pocision de la nave
-        setRenglon(getRenglon() + (getComponenteY() * 30));
+        setRenglon(getRenglon() + (getComponenteY() * 20));
         setColumna(getColumna() + (getComponenteX() * 30));
         //**********CONTROL DE REAPARICION DE LA NAVE**********
         // FASE DE ENTRADA: Si la nave está por encima del límite

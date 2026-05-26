@@ -2,6 +2,7 @@ package juego;
 
 import edu.epromero.util.Lienzo;
 import edu.epromero.util.ComportamientoEnemigo;
+import edu.epromero.util.FabricaAudio;
 
 /**
  *
@@ -18,7 +19,6 @@ public class AveDePresa extends NaveEnemiga {
         // Pon la ruta de tu imagen enemiga
         setNomSprite("/resources/avepresa.png");
         inicia();
-        getMiImagen().ponColorTransparente(Lienzo.BLANCO);
         //Se inicia la direccion de la nave
         this.componenteY = ABAJO;
         setPuntos(100);
@@ -29,11 +29,11 @@ public class AveDePresa extends NaveEnemiga {
     public void Mueve(Entrada e) {
         //**********CONTROL DEL MOVIMIENTO Y DIRECCION*********
         //Averiguar si se acerca al techo
-        if (getRenglon() > (e.getMiCanvas().pideLimiteYMax()) - 150) {
+        if (getRenglon() > (e.getMiCanvas().pideLimiteYMax()) - 200) {
             setComponenteY(ABAJO);
         }
         //Averiguar si se acerca al lim inferior
-        if (getRenglon() < (e.getMiCanvas().pideLimiteYMin()) + 150) {
+        if (getRenglon() < (e.getMiCanvas().pideLimiteYMin()) + 200) {
             setComponenteY(ARRIBA);
         }
         setRenglon(getRenglon() + (getComponenteY() * 20));
@@ -69,7 +69,9 @@ public class AveDePresa extends NaveEnemiga {
                 cargadorListo = false;
             }
             if (cargadorListo) {
-                cartucho[0].iniciarPosicion(getColumna(), getRenglon(), 0, -40);
+                FabricaAudio miAudio = new FabricaAudio();
+                miAudio.reproducir(".//src//disparo.wav");
+                cartucho[0].iniciarPosicion(getColumna(), getRenglon(), 0, -30);
                 cartucho[0].setEstado(Bala.VUELO);
             }
         }

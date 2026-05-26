@@ -22,7 +22,6 @@ public class Bala extends ElementoGrafico {
         super();
         setNomSprite("/resources/bala.png");
         inicia();
-        getMiImagen().ponColorTransparente(Lienzo.BLANCO);
         setEstado(INACTIVA);
 
     }
@@ -39,7 +38,30 @@ public class Bala extends ElementoGrafico {
     //pinta la img de la bala
     public void pinta(Lienzo canvas) {
         setCanvas(canvas);
-        canvas.dibujo(getColumna(), getRenglon(), getMiImagen());
+
+        if (getEstado() == VUELO) {
+            // DIBUJO NORMAL: Pinta el láser/proyectil en su posición
+            canvas.dibujo(getColumna(), getRenglon(), getMiImagen());
+        } else {
+            // Si no está en vuelo, abrimos el bloque else y preguntamos por la explosión
+            if (getEstado() == EXPLOTANDO) {
+                // DIBUJO DE EXPLOSIÓN: Guardamos el nombre del sprite de la bala
+                String spriteOriginal = getNomSprite();
+
+                // Cambiamos temporalmente al sprite de explosión
+                setNomSprite("/resources/explosion.png");
+                inicia();
+                getMiImagen().ponColorTransparente(Lienzo.BLANCO);
+
+                // Dibujamos el estallido centrado
+                canvas.dibujo(getColumna() - 20, getRenglon() - 20, getMiImagen());
+
+                // RESTAURAMOS EL SPRITE ORIGINAL
+                setNomSprite(spriteOriginal);
+                inicia();
+                getMiImagen().ponColorTransparente(Lienzo.BLANCO);
+            }
+        }
     }
 
     @Override

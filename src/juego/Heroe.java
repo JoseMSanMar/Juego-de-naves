@@ -1,6 +1,7 @@
 package juego;
 
 import edu.epromero.util.Destruible;
+import edu.epromero.util.FabricaAudio;
 import edu.epromero.util.Lienzo;
 import static java.awt.event.KeyEvent.VK_A;
 import static java.awt.event.KeyEvent.VK_D;
@@ -23,9 +24,8 @@ public class Heroe extends ElementoGrafico implements Destruible {
     public Heroe() {
         setNomSprite("/resources/Heroe.png");
         inicia();
-        getMiImagen().ponColorTransparente(Lienzo.BLANCO);
         bala = new Bala();
-        setVidas(1);
+        setVidas(3);
         //public void ponPuntos(int puntos)
     }
 
@@ -55,6 +55,8 @@ public class Heroe extends ElementoGrafico implements Destruible {
 
     public void destruir(boolean danio) {
         if (danio) {
+            FabricaAudio miAudio = new FabricaAudio();
+            miAudio.reproducir(".//src//explosion.wav");
             setVisible(false);
         }
     }
@@ -71,7 +73,7 @@ public class Heroe extends ElementoGrafico implements Destruible {
     public void Mueve(Entrada e) {
         if (e.getMiCanvas().fuePulsadaTecla(VK_LEFT)
                 || e.getMiCanvas().fuePulsadaTecla(VK_A)) {
-            if (getColumna() >= getCanvas().pideLimiteXMin() + 60) {
+            if (getColumna() >= getCanvas().pideLimiteXMin() + 160) {
                 //System.out.println("Tecla arriba pulsada antes: " + columna);
                 setColumna(getColumna() - 20);
             }
@@ -79,7 +81,7 @@ public class Heroe extends ElementoGrafico implements Destruible {
         }
         if (e.getMiCanvas().fuePulsadaTecla(VK_RIGHT)
                 || e.getMiCanvas().fuePulsadaTecla(VK_D)) {
-            if (getColumna() <= getCanvas().pideLimiteXMax() - 60) {
+            if (getColumna() <= getCanvas().pideLimiteXMax() - 160) {
                 //System.out.println("Tecla abajo pulsada: " + columna);
                 setColumna(getColumna() + 20);
             }
@@ -124,11 +126,12 @@ public class Heroe extends ElementoGrafico implements Destruible {
 
     public void dispara(Entrada e) {
         if (e.getMiCanvas().fuePulsadaTecla(VK_SPACE)) {
-            // Regla fundamental:
             //Solo puedes disparar si no hay otra bala tuya en vuelo
             if (getBala().getEstado() == Bala.INACTIVA) {
+                FabricaAudio miAudio = new FabricaAudio();
+                miAudio.reproducir(".//src//disparo.wav");
                 // La bala nace JUSTO en la posición actual de la nave
-                getBala().iniciarPosicion(getColumna(), getRenglon(), 0, 80);
+                getBala().iniciarPosicion(getColumna(), getRenglon(), 0, 30);
                 // Le damos luz verde para que empiece a volar
                 getBala().setEstado(Bala.VUELO);
             }
